@@ -1,38 +1,74 @@
-let express = require('express')
-var fetch = require('node-fetch');
+const express = require('express')
+const favicon = require('serve-favicon')
+const path = require('path')
+const http = require('http')
+const parser = require('./parser')
 
 const app = express()
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
+app.use(express.static(path.join(__dirname, 'public')));
 
-app.get('/', (req,res)=>{
-    let response = {
-        ip_adress: null,
-        language: null,
-        software: null,
-        city: null,
-        country: null
+app.set('views', path.join(__dirname, 'public'));
+app.set('view engine', 'pug');
+
+
+app.get('/', (req, res)=>{
+    let answer = {
+        ipadress: parser.getIp(req),
+        language: parser.getLanguage(req),
+        software: parser.getSoftware(req),
+        country: 'not available',
+        city: 'not available'
     }
 
+    http.get('http://ip-api.com/json/' + answer.ip_adress , (response)=>{
+        response.on('data',(data)=>{
+            let json = JSON.parse(data);
+
+            if(json.country){
+                answer.country = json.country; 
+            }
+            if(json.city){
+                answer.city = json.city;
+            }
+            
+            console.log(answer);
+            res.send(answer);
+        })
+    })
     
-    let ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-
-    response.ip_adress = ip.substring(ip.lastIndexOf(':'));
-
-    let ua = req.headers['user-agent']; 
-    response.software = ua.substring(ua.indexOf('(') + 1,ua.indexOf(')'));
+    res.render('index', {answer})
+})
 
 
-    response.language = req.headers["accept-language"].split(';')[0];
+app.get('/api', (req,res)=>{
+    let answer = {
+        ipadress: parser.getIp(req),
+        language: parser.getLanguage(req),
+        software: parser.getSoftware(req),
+        country: 'not available',
+        city: 'not available'
+    }
 
-    console.log(req.headers);
+    http.get('http://ip-api.com/json/' + answer.ip_adress , (response)=>{
+        response.on('data',(data)=>{
+            let json = JSON.parse(data);
 
-    fetch("http://ip-api.com/json/" + response.ip_adress)
-	.then(res => res.json())
-	.then((json) => {
-        response.city = json.city;
-        response.contry = json.country;
-        res.send(response);
-    });
+            if(json.country){
+                answer.country = json.country; 
+            }
+            if(json.city){
+                answer.city = json.city;
+            }
+            
+            console.log(answer);
+            res.send(answer);
+        })
+    })
 
-});
+})
+
+
 
 app.listen(process.env.PORT || 3004);
+console.log('listening on port: ' + 3004);

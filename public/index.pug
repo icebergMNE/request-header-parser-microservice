@@ -1,0 +1,26 @@
+doctype 5
+html(lang='en')
+    head
+        meta(name="viewport", content="width=device-width, initial-scale=1.0")
+        meta(http-equiv="Content-Type", content="text/html;charset=UTF-8")
+        title Request Parser api
+        link(href='css/styles.css', rel='stylesheet')
+        link(rel="stylesheet", href="http://fonts.googleapis.com/css?family=Open+Sans|Dosis:400,800", type="text/css")
+    body
+        h1 Request parser api
+        div
+            ul
+                li IP address - 
+                    span #{answer.ipadress}
+                li Language -  
+                    span #{answer.language}
+                li Software - 
+                    span #{answer.software}
+                li Country - 
+                    span #{answer.country}
+                li City - 
+                    span #{answer.city}
+                li Api endpoint - 
+                    a(href="/api") https://header-parser-ice.herokuapp.com/api
+        footer made by stefan fustar - 
+            a(href="http://fustar.me") fustar.me
