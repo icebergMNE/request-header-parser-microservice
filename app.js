@@ -49,7 +49,7 @@ app.get('/api', (req,res)=>{
         city: 'not available'
     }
 
-    http.get('http://ip-api.com/json/' + answer.ip_adress , (response)=>{
+    http.get('http://ip-api.com/json/' + parser.getIp(req) , (response)=>{
         response.on('data',(data)=>{
             let json = JSON.parse(data);
 
