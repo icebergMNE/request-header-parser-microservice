@@ -36,7 +36,7 @@ app.get('/', (req, res)=>{
             res.send(answer);
         })
     })
-    
+
     res.render('index', {answer})
 })
 
@@ -54,12 +54,8 @@ app.get('/api', (req,res)=>{
         response.on('data',(data)=>{
             let json = JSON.parse(data);
 
-            if(json.country){
-                answer.country = json.country; 
-            }
-            if(json.city){
-                answer.city = json.city;
-            }
+            answer.country = json.country; 
+            answer.city = json.city;
             
             console.log(answer);
             res.send(answer);
