@@ -33,11 +33,10 @@ app.get('/', (req, res)=>{
             }
             
             console.log(answer);
-            res.send(answer);
+            res.render('index', {answer})
         })
     })
 
-    res.render('index', {answer})
 })
 
 
