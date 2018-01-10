@@ -3,10 +3,12 @@ const favicon = require('serve-favicon')
 const path = require('path')
 const http = require('http')
 const parser = require('./parser')
+const cors = require('cors')
 
 const app = express()
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')))
 app.use(express.static(path.join(__dirname, 'public')));
+app.use(cors())
 
 app.set('views', path.join(__dirname, 'public'));
 app.set('view engine', 'pug');
@@ -20,7 +22,7 @@ app.get('/', (req, res)=>{
         country: 'not available',
         city: 'not available'
     }
-
+    
     http.get('http://ip-api.com/json/' + parser.getIp(req) , (response)=>{
         response.on('data',(data)=>{
             let json = JSON.parse(data);
